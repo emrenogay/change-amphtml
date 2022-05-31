@@ -5,7 +5,7 @@
  * Description: AMP sayfaları için amphtml etiketi domainini değiştirir. Ücretsiz bir yazılımdır. Güncel sürümünü github sayfamdan edinebilirsiniz.
  * Version:     1.0
  * Author:      Emre Nogay
- * Plugin URI:  https://github.com/emrenogay
+ * Plugin URI:  https://github.com/emrenogay/change-amphtml
  * Author URI:  https://emrenogay.com
  * License: GNU General Public License v3.0
  *
