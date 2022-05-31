@@ -12,7 +12,7 @@
  */
 
 
-add_filter( 'plugin_action_links_change-amphtml/change-amphtml.php', function ($links_array){
+add_filter( 'plugin_action_links_change-amphtml-main/change-amphtml.php', function ($links_array){
     array_unshift( $links_array, '<a href="'.get_admin_url().'options-general.php?page=emrenogay_amphtml_group">Ayarlar</a>' );
     return $links_array;
 } );
