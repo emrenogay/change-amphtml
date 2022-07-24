@@ -12,6 +12,41 @@
  */
 
 
+//Bu alan bunny.net kullanmak isteyenler için opsiyonel olarak eklenmiştir.
+//Bunny.net sistemini AMP'de kullanmak için 16 ve satırları silin. 20. satırı kendinize göre düzenleyin.
+/*
+function buffer_bunny($buffer){
+
+$domain = str_replace(['http://', 'https://', 'www.'], null, get_site_url());
+$bunny_domain = 'socceramp.b-cdn.net';
+
+
+return preg_replace(
+    '/<amp-img(.*?)src="https?:\/\/'.$domain.'/',
+    '<amp-img$1src="https://'.$bunny_domain, 
+    $buffer);
+
+}
+
+function buffer_bunny_start()
+    {
+        if (function_exists('buffer_bunny')) {
+            ob_start('buffer_bunny');
+        }
+    }
+
+    function buffer_bunny_end()
+    {
+        if (function_exists('buffer_bunny') && ob_start('buffer_bunny') === true) {
+            ob_end_flush();
+        }
+    }
+
+add_action('after_setup_theme', 'buffer_bunny_start');
+add_action('shutdown', 'buffer_bunny_end');
+*/
+
+
 add_filter( 'plugin_action_links_change-amphtml-main/change-amphtml.php', function ($links_array){
     array_unshift( $links_array, '<a href="'.get_admin_url().'options-general.php?page=emrenogay_amphtml_group">Ayarlar</a>' );
     return $links_array;
