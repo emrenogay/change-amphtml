@@ -47,17 +47,13 @@ add_action('shutdown', 'buffer_bunny_end');
 */
 
 
-
-
-
-/*
-
 //Bu alan resimlerde cdn.ampproject.org kullanmak isteyenler için opsiyonel olarak eklenmiştir.
 
 function buffer_bunny( $finder ) {
 
     if ( strpos( $finder, 'https://cdn.ampproject.org/' ) !== false && ! is_admin() ) {
-
+		
+	
         $site = str_replace(['http://', 'https://'], '', rtrim(get_site_url(), '/'));
 
         $imgPattern = '@<amp-img(.*?)src="https?://'.$site.'@si';
@@ -69,9 +65,17 @@ function buffer_bunny( $finder ) {
         $bgReplace = 'background-image:$1url(http$2://'.str_replace(['.', ' '], '-', $site) . '.cdn.ampproject.org/i/s/'.$site;
 
         $finder = preg_replace($bgPattern, $bgReplace, $finder);
-
+	
     }
-
+	
+	$http_version = is_ssl() ? 'https://' : 'http://';
+	$addon = !empty(get_option('emrenogay__amphtml')) ? get_option('emrenogay__amphtml') : str_replace(['https://', 'http://'], null, get_site_url());
+	
+	$finder = str_replace(
+        '<link rel="amphtml" href="'.get_site_url(),
+        '<link rel="amphtml" href="'.$http_version . $addon,
+        $finder);
+	
     return $finder;
 }
 
@@ -92,28 +96,11 @@ function buffer_bunny_end()
 add_action('after_setup_theme', 'buffer_bunny_start');
 add_action('shutdown', 'buffer_bunny_end');
 
-*/
-
 
 add_filter( 'plugin_action_links_change-amphtml-main/change-amphtml.php', function ($links_array){
     array_unshift( $links_array, '<a href="'.get_admin_url().'options-general.php?page=emrenogay_amphtml_group">Ayarlar</a>' );
     return $links_array;
 } );
-
-add_action('wp_head', function () {
-    ob_start();
-}, 0);
-
-add_action('wp_head', function () {
-    $in = ob_get_clean();
-    $http_version = is_ssl() ? 'https://' : 'http://';
-    $addon = !empty(get_option('emrenogay__amphtml')) ? get_option('emrenogay__amphtml') : str_replace(['https://', 'http://'], null, get_site_url());
-    $in = str_replace(
-        '<link rel="amphtml" href="'.get_site_url(),
-        '<link rel="amphtml" href="'.$http_version . $addon,
-        $in);
-    echo $in;
-}, PHP_INT_MAX);
 
 
 add_action( 'admin_init', function () {
