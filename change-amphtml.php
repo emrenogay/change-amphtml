@@ -76,6 +76,11 @@ function buffer_bunny( $finder ) {
         '<link rel="amphtml" href="'.$http_version . $addon,
         $finder);
 	
+	$finder = str_replace(
+        "<link rel='amphtml' href='".get_site_url(),
+        "<link rel='amphtml' href='".$http_version . $addon,
+        $finder);
+	
     return $finder;
 }
 
