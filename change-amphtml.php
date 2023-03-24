@@ -11,76 +11,55 @@
  *
  */
 
-
-//Bu alan bunny.net kullanmak isteyenler için opsiyonel olarak eklenmiştir.
-//Bunny.net sistemini AMP'de kullanmak için 16 ve satırları silin. 20. satırı kendinize göre düzenleyin.
-/*
-function buffer_bunny($buffer){
-
-$domain = str_replace(['http://', 'https://', 'www.'], null, get_site_url());
-$bunny_domain = 'socceramp.b-cdn.net';
-
-
-return preg_replace(
-    '/<amp-img(.*?)src="https?:\/\/'.$domain.'/',
-    '<amp-img$1src="https://'.$bunny_domain, 
-    $buffer);
-
-}
-
-function buffer_bunny_start()
-    {
-        if (function_exists('buffer_bunny')) {
-            ob_start('buffer_bunny');
-        }
-    }
-
-    function buffer_bunny_end()
-    {
-        if (function_exists('buffer_bunny') && ob_start('buffer_bunny') === true) {
-            ob_end_flush();
-        }
-    }
-
-add_action('after_setup_theme', 'buffer_bunny_start');
-add_action('shutdown', 'buffer_bunny_end');
-*/
-
-
-//Bu alan resimlerde cdn.ampproject.org kullanmak isteyenler için opsiyonel olarak eklenmiştir.
-
 function buffer_bunny( $finder ) {
 
-    if ( strpos( $finder, 'https://cdn.ampproject.org/' ) !== false && ! is_admin() ) {
+    if ( strpos( $finder, 'https://cdn.ampproject.org/' ) !== false && !is_admin() ) {
+
+        $pure_domain = str_replace(['https://', 'http://'], null, get_site_url());
+        $prefix = is_ssl() ? 'https://' : 'http://';
+
+        $dom = new DOMDocument();
+        $dom->loadHTML($finder, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        $xpath = new DOMXPath($dom);
+
+        $elements = $xpath->query('//amp-img | //img');
+
+        foreach ($elements as $element) {
+            // update src attribute
+            if ($element->hasAttribute('src')) {
+                $src = $element->getAttribute('src');
+                $new_src = preg_replace('/https?:\/\/.*?\//', $prefix . 'i0.wp.com/' . $pure_domain . '/', $src);
+                $element->setAttribute('src', $new_src);
+            }
+
+            // update srcset attribute
+            if ($element->hasAttribute('srcset')) {
+                $srcset = $element->getAttribute('srcset');
+                $new_srcset = preg_replace('/https?:\/\/.*?\//', $prefix . 'i0.wp.com/' . $pure_domain . '/', $srcset);
+                $element->setAttribute('srcset', $new_srcset);
+            }
+        }
+
+        $finder = $dom->saveHTML();
 		
-	
-        $site = str_replace(['http://', 'https://'], '', rtrim(get_site_url(), '/'));
-
-        $imgPattern = '@<amp-img(.*?)src="https?://'.$site.'@si';
-        $imgReplace = '<amp-img$1src="https://'.str_replace(['.', ' '], '-', $site).'.cdn.ampproject.org'.'/i/s/'.$site;
-        $finder = preg_replace( $imgPattern, $imgReplace, $finder );
-
-
-        $bgPattern = "@background-image:(.*?)url\('?https?://" . $site.'@si';
-        $bgReplace = 'background-image:$1url(http$2://'.str_replace(['.', ' '], '-', $site) . '.cdn.ampproject.org/i/s/'.$site;
-
-        $finder = preg_replace($bgPattern, $bgReplace, $finder);
-	
     }
-	
+
 	$http_version = is_ssl() ? 'https://' : 'http://';
 	$addon = !empty(get_option('emrenogay__amphtml')) ? get_option('emrenogay__amphtml') : str_replace(['https://', 'http://'], null, get_site_url());
-	
+
 	$finder = str_replace(
         '<link rel="amphtml" href="'.get_site_url(),
         '<link rel="amphtml" href="'.$http_version . $addon,
         $finder);
-	
+
 	$finder = str_replace(
         "<link rel='amphtml' href='".get_site_url(),
         "<link rel='amphtml' href='".$http_version . $addon,
         $finder);
 	
+	
+
     return $finder;
 }
 
