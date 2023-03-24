@@ -3,7 +3,7 @@
  *
  * Plugin Name: Change AMPHTML
  * Description: AMP sayfaları için amphtml etiketi domainini değiştirir. Ücretsiz bir yazılımdır. Güncel sürümünü github sayfamdan edinebilirsiniz.
- * Version:     1.6
+ * Version:     1.7
  * Author:      Emre Nogay
  * Plugin URI:  https://github.com/emrenogay/change-amphtml
  * Author URI:  https://emrenogay.com
