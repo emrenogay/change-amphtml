@@ -3,7 +3,7 @@
  *
  * Plugin Name: Change AMPHTML
  * Description: AMP sayfaları için amphtml etiketi domainini değiştirir. Ücretsiz bir yazılımdır. Güncel sürümünü github sayfamdan edinebilirsiniz.
- * Version:     1.8
+ * Version:     1.9
  * Author:      Emre Nogay
  * Plugin URI:  https://github.com/emrenogay/change-amphtml
  * Author URI:  https://emrenogay.com
@@ -26,18 +26,22 @@ function buffer_bunny( $finder ) {
         $elements = $xpath->query('//amp-img | //img | //amp-anim');
 
         foreach ($elements as $element) {
-            // update src attribute
+            
             if ($element->hasAttribute('src')) {
                 $src = $element->getAttribute('src');
-                $new_src = preg_replace('/https?:\/\/.*?\//', $prefix . 'i0.wp.com/' . $pure_domain . '/', $src);
+                if(strstr($src, $_SERVER['HTTP_HOST'])){
+					$new_src = preg_replace('/https?:\/\/.*?\//', $prefix . 'i0.wp.com/' . $pure_domain . '/', $src);
                 $element->setAttribute('src', $new_src);
+				}
             }
 
-            // update srcset attribute
+            
             if ($element->hasAttribute('srcset')) {
                 $srcset = $element->getAttribute('srcset');
-                $new_srcset = preg_replace('/https?:\/\/.*?\//', $prefix . 'i0.wp.com/' . $pure_domain . '/', $srcset);
+				if(strstr($srcset, $_SERVER['HTTP_HOST'])){
+					$new_srcset = preg_replace('/https?:\/\/.*?\//', $prefix . 'i0.wp.com/' . $pure_domain . '/', $srcset);
                 $element->setAttribute('srcset', $new_srcset);
+				}
             }
         }
 
