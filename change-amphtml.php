@@ -7,7 +7,7 @@
  * Author:      Emre Nogay
  * Plugin URI:  https://github.com/emrenogay/change-amphtml
  * Author URI:  https://emrenogay.com
- * License: GNU General Public License v3.0
+ * Bu eklenti ücretsizdir. Satın almak için para ödemeyin.
  *
  */
 
@@ -59,8 +59,6 @@ function buffer_bunny($finder)
     $addon = !empty(get_option('emrenogay__amphtml')) ? get_option('emrenogay__amphtml') : str_replace(['https://', 'http://'], null, get_site_url());
 
     $finder = str_replace('<link rel="amphtml" href="' . get_site_url() , '<link rel="amphtml" href="' . $http_version . $addon, $finder);
-
-    $finder = str_replace("<link rel='amphtml' href='" . get_site_url() , "<link rel='amphtml' href='" . $http_version . $addon, $finder);
 
     return $finder;
 }
